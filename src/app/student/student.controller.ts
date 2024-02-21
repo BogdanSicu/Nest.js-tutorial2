@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common"
+import { Body, Controller, Get, Param, Post, Put, ParseUUIDPipe, HttpStatus } from "@nestjs/common"
 import { CreateStudentDto, FindStudentResponseDto, StudentResponseDto, UpdateStudentDto } from "./dto/student.dto";
 import { StudentService } from "./student.service";
 
@@ -16,7 +16,8 @@ export class StudentController {
 
     @Get('/:studentId')
     getStudentById(
-        @Param('studentId') studentId: string
+        @Param('studentId', 
+        new ParseUUIDPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) studentId: string
     ): FindStudentResponseDto {
         return this.studentService.getStudentById(studentId);
     }
@@ -30,7 +31,7 @@ export class StudentController {
 
     @Put('/:studentId')
     updateStudent(
-        @Param('studentId') studentId: string,
+        @Param('studentId', new ParseUUIDPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) studentId: string,
         @Body() body: UpdateStudentDto
     ): StudentResponseDto {
         return this.studentService.updateStudent(body, studentId);

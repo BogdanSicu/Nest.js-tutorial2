@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common"
+import { Controller, Get, HttpStatus, Param, ParseUUIDPipe } from "@nestjs/common"
 import { FindTeacherResponseDto } from "./dto/teacher.dto";
 import { TeacherService } from "./teacher.service";
 
@@ -16,7 +16,7 @@ export class TeacherController {
 
     @Get('/:teacherId')
     getTeacherById(
-        @Param('teacherId') teacherId: string
+        @Param('teacherId', new ParseUUIDPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) teacherId: string
     ): FindTeacherResponseDto {
         return this.teacherService.getTeacherById(teacherId);
     }
